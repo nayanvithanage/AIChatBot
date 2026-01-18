@@ -1,9 +1,15 @@
 import { ChatRequest, ChatResponse } from './types';
 
-const API_BASE_URL = 'http://localhost:5169/api';
+// Get config from DMS
+const config = (window as any).INEIGHT_CHATBOT_CONFIG || {
+    apiUrl: 'http://localhost:5169/api',
+    jwtToken: null
+};
+
+const API_BASE_URL = config.apiUrl;
 
 export class ChatAPI {
-    private token: string | null = null;
+    private token: string | null = config.jwtToken;
 
     setToken(token: string) {
         this.token = token;

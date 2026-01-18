@@ -20,10 +20,18 @@ builder.Services.AddCors(options =>
     options.AddPolicy("DMS", policy =>
     {
         policy.WithOrigins(
+                // Development - React widget
                 "http://localhost:5173",
-                "http://localhost:5174", 
+                "http://localhost:5174",
                 "http://localhost:5175",
-                "https://localhost:5173")
+                "https://localhost:5173",
+                // Development - DMS
+                "http://localhost:44300",
+                "https://localhost:44300",
+                "http://localhost:52291",
+                "https://localhost:52291",
+                "http://localhost:5000",
+                "https://localhost:5001")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();

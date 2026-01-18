@@ -4,6 +4,7 @@ import { ChatMessage } from './types';
 import './ChatWidget.css';
 
 export default function ChatWidget() {
+    const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -66,102 +67,112 @@ export default function ChatWidget() {
     };
 
     return (
-        <div className="chat-widget">
-            <div className="chat-header">
-                <div className="header-content">
-                    <div className="header-icon">💬</div>
-                    <div>
-                        <h2>InEight AI Assistant</h2>
-                        <p>Ask me anything about your documents</p>
+        <>
+            {/* Floating Chat Button */}
+            {!isOpen && (
+                <button
+                    className="chat-fab"
+                    onClick={() => setIsOpen(true)}
+                    aria-label="Open chat"
+                >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </button>
+            )}
+
+            {/* Chat Window */}
+            {isOpen && (
+                <div className="chat-widget-container">
+                    <div className="chat-widget">
+                        <div className="chat-header">
+                            <div className="header-content">
+                                <div className="header-icon">💬</div>
+                                <div className="header-text">
+                                    <h2>InEight AI Assistant</h2>
+                                    <p>Ask about your documents</p>
+                                </div>
+                            </div>
+                            <button
+                                className="close-button"
+                                onClick={() => setIsOpen(false)}
+                                aria-label="Close chat"
+                            >
+                                ✕
+                            </button>
+                        </div>
+
+                        <div className="chat-messages">
+                            {messages.length === 0 && (
+                                <div className="empty-state">
+                                    <div className="empty-icon">🤖</div>
+                                    <h3>How can I help?</h3>
+                                    <p>Ask me about your documents</p>
+                                </div>
+                            )}
+
+                            {messages.map((message) => (
+                                <div key={message.id} className={`message ${message.role}`}>
+                                    <div className="message-avatar">
+                                        {message.role === 'user' ? '👤' : '🤖'}
+                                    </div>
+                                    <div className="message-content">
+                                        <div className="message-text">{message.content}</div>
+                                        {message.links && message.links.length > 0 && (
+                                            <div className="message-links">
+                                                {message.links.map((link, idx) => (
+                                                    <a
+                                                        key={idx}
+                                                        href={link.url}
+                                                        className="document-link"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        📄 {link.title}
+                                                    </a>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+
+                            {isLoading && (
+                                <div className="message assistant">
+                                    <div className="message-avatar">🤖</div>
+                                    <div className="message-content">
+                                        <div className="typing-indicator">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            <div ref={messagesEndRef} />
+                        </div>
+
+                        <div className="chat-input">
+                            <input
+                                type="text"
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                onKeyPress={handleKeyPress}
+                                placeholder="Ask a question..."
+                                disabled={isLoading}
+                            />
+                            <button
+                                onClick={handleSend}
+                                disabled={!input.trim() || isLoading}
+                                className="send-button"
+                            >
+                                ➤
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div className="chat-messages">
-                {messages.length === 0 && (
-                    <div className="empty-state">
-                        <div className="empty-icon">🤖</div>
-                        <h3>Welcome to InEight AI Assistant!</h3>
-                        <p>Ask me questions about your documents, projects, or transmittals.</p>
-                        <div className="suggestions">
-                            <button onClick={() => setInput('Show me recent documents')}>
-                                Recent documents
-                            </button>
-                            <button onClick={() => setInput('What transmittals are pending?')}>
-                                Pending transmittals
-                            </button>
-                        </div>
-                    </div>
-                )}
-
-                {messages.map((message) => (
-                    <div key={message.id} className={`message ${message.role}`}>
-                        <div className="message-avatar">
-                            {message.role === 'user' ? '👤' : '🤖'}
-                        </div>
-                        <div className="message-content">
-                            <div className="message-text">{message.content}</div>
-                            {message.links && message.links.length > 0 && (
-                                <div className="message-links">
-                                    <div className="links-title">Related Documents:</div>
-                                    {message.links.map((link, idx) => (
-                                        <a
-                                            key={idx}
-                                            href={link.url}
-                                            className="document-link"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            📄 {link.title}
-                                        </a>
-                                    ))}
-                                </div>
-                            )}
-                            {message.confidence !== undefined && (
-                                <div className="confidence">
-                                    Confidence: {(message.confidence * 100).toFixed(0)}%
-                                </div>
-                            )}
-                            <div className="message-time">
-                                {message.timestamp.toLocaleTimeString()}
-                            </div>
-                        </div>
-                    </div>
-                ))}
-
-                {isLoading && (
-                    <div className="message assistant">
-                        <div className="message-avatar">🤖</div>
-                        <div className="message-content">
-                            <div className="typing-indicator">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                <div ref={messagesEndRef} />
-            </div>
-
-            <div className="chat-input">
-                <textarea
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    placeholder="Ask a question about your documents..."
-                    rows={1}
-                    disabled={isLoading}
-                />
-                <button
-                    onClick={handleSend}
-                    disabled={!input.trim() || isLoading}
-                    className="send-button"
-                >
-                    {isLoading ? '⏳' : '➤'}
-                </button>
-            </div>
-        </div>
+            )}
+        </>
     );
 }

@@ -1,3 +1,5 @@
+@using InEightDMS.Web.Helpers
+@using Microsoft.AspNet.Identity
 <!DOCTYPE html>
 <html>
 <head>
@@ -58,5 +60,29 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     @RenderSection("Scripts", required: false)
+
+    @* AI Chatbot Widget *@
+    @if (Request.IsAuthenticated)
+    {
+        var userId = User.Identity.GetUserId<int>();
+        var userName = User.Identity.GetUserName();
+        var userRole = User.IsInRole("Admin") ? "Admin" : "User";
+        var jwtToken = JwtHelper.GenerateToken(userId, userName, userRole);
+        
+        <div id="root"></div>
+        
+        <script>
+            // Pass JWT token to widget
+            window.INEIGHT_CHATBOT_CONFIG = {
+                apiUrl: '@System.Configuration.ConfigurationManager.AppSettings["ChatbotApiUrl"]',
+                jwtToken: '@jwtToken'
+            };
+        </script>
+        
+        <!-- Load chat widget bundle -->
+        <link rel="stylesheet" href="~/Scripts/chatbot/assets/index-BMiv_uBi.css" />
+        <script type="module" src="~/Scripts/chatbot/assets/index-18nTfdO2.js"></script>
+    }
 </body>
 </html>
+
