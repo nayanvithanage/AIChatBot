@@ -1,0 +1,45 @@
+@{
+    ViewBag.Title = "Welcome";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8 text-center">
+        <h1 class="display-4 mb-4">InEight Document Management System</h1>
+        <p class="lead mb-4">
+            A comprehensive document management solution for construction projects.
+            Manage documents, track revisions, and collaborate with your team.
+        </p>
+        <hr class="my-4" />
+        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+            <a href="@Url.Action("Login", "Account")" class="btn btn-primary btn-lg px-4">Login</a>
+            <a href="@Url.Action("Register", "Account")" class="btn btn-outline-primary btn-lg px-4">Register</a>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">📁 Document Management</h5>
+                <p class="card-text">Upload, organize, and manage documents with comprehensive metadata tracking.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">👥 Role-Based Access</h5>
+                <p class="card-text">Control who can view and edit documents with Admin, Manager, and User roles.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🔗 Linked Items</h5>
+                <p class="card-text">Track RFIs, Transmittals, and other items linked to your documents.</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,73 @@
+@model InEightDMS.Web.Models.DocumentCreateViewModel
+@{
+    ViewBag.Title = "Upload Document";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Projects")">Projects</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Documents", new { projectId = ViewBag.ProjectId })">@ViewBag.ProjectName</a></li>
+        <li class="breadcrumb-item active">Upload Document</li>
+    </ol>
+</nav>
+
+<h2>Upload Document</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-8">
+        @using (Html.BeginForm("Create", "Documents", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.ProjectId)
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    @Html.LabelFor(m => m.Name, new { @class = "form-label" })
+                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    @Html.LabelFor(m => m.Type, new { @class = "form-label" })
+                    @Html.DropDownListFor(m => m.Type, (SelectList)ViewBag.DocumentTypes, "-- Select Type --", new { @class = "form-select" })
+                    @Html.ValidationMessageFor(m => m.Type, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                @Html.LabelFor(m => m.Description, new { @class = "form-label" })
+                @Html.TextAreaFor(m => m.Description, new { @class = "form-control", @rows = 3 })
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    @Html.LabelFor(m => m.Category, new { @class = "form-label" })
+                    @Html.TextBoxFor(m => m.Category, new { @class = "form-control" })
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    @Html.LabelFor(m => m.TransmittalNumber, new { @class = "form-label" })
+                    @Html.TextBoxFor(m => m.TransmittalNumber, new { @class = "form-control", @placeholder = "e.g., TX-001" })
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                @Html.LabelFor(m => m.Tags, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.Tags, new { @class = "form-control", @placeholder = "e.g., safety, structural, mechanical" })
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Document File</label>
+                <input type="file" name="file" class="form-control" />
+                <small class="text-muted">Optional: Upload the document file</small>
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Upload Document</button>
+                <a href="@Url.Action("Index", "Documents", new { projectId = ViewBag.ProjectId })" class="btn btn-secondary">Cancel</a>
+            </div>
+        }
+    </div>
+</div>

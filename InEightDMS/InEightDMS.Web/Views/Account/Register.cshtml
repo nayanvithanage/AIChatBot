@@ -1,0 +1,64 @@
+@model InEightDMS.Web.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Register";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Create Account</h4>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Name, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", @placeholder = "Enter your full name" })
+                        @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                    </div>
+                    
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Email, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @type = "email", @placeholder = "Enter your email" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    </div>
+                    
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Password, new { @class = "form-label" })
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Minimum 6 characters" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+                    
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "form-label" })
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", @placeholder = "Confirm your password" })
+                        @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+                    </div>
+                    
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Role, new { @class = "form-label" })
+                        @Html.DropDownListFor(m => m.Role, new SelectList(new[] {
+                            new { Value = "2", Text = "Project Manager" },
+                            new { Value = "3", Text = "Project User" }
+                        }, "Value", "Text"), new { @class = "form-select" })
+                        @Html.ValidationMessageFor(m => m.Role, "", new { @class = "text-danger" })
+                        <small class="text-muted">Note: Admin cannot be registered.</small>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </div>
+                }
+                
+                <hr />
+                <p class="text-center mb-0">
+                    Already have an account? <a href="@Url.Action("Login", "Account")">Login here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
